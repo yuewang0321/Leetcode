@@ -85,4 +85,6 @@ class Solution {
             j = colors.length-1;
         }
     }
+
+    
 }
