@@ -141,6 +141,39 @@ class Solution {
         }  
         return map.get(head);
     }
+    // O(1) space complexity
+    // https://leetcode.com/problems/copy-list-with-random-pointer/discuss/43491/A-solution-with-constant-space-complexity-O(1)-and-linear-time-complexity-O(N)
+    public Node copyRandomList(Node head) {
+        if (head==null) return null;
+        
+        Node head_pointer = head;
+        
+        while (head_pointer!=null) {
+            Node temp = head_pointer.next;
+            head_pointer.next = new Node(head_pointer.val);;
+            head_pointer.next.next = temp;
+            head_pointer = temp;
+        }
+        
+        head_pointer = head;
+        while (head_pointer!=null) {
+            if (head_pointer.random!=null) head_pointer.next.random = head_pointer.random.next;
+            head_pointer = head_pointer.next.next;
+        }
+        
+        head_pointer = head;
+        Node rtn = head.next;
+        Node pointer = rtn;
+        while (pointer.next!=null) {
+            head_pointer.next = head_pointer.next.next;
+            head_pointer = head_pointer.next;
+            
+            pointer.next = pointer.next.next;
+            pointer = pointer.next;
+        }
+        head_pointer.next = head_pointer.next.next;
+        return rtn;
+    }
 
 
     /* Leetcode 23. Merge k Sorted Lists
