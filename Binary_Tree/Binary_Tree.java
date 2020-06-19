@@ -179,4 +179,71 @@ class Solution {
         if (root.val == value) return Math.max(left, right)+1;
         else return 0;
     }
+
+    /* Leetcode 543. Diameter of Binary Tree
+    Given a binary tree, you need to compute the length of the diameter of the tree. 
+    The diameter of a binary tree is the length of the longest path between any two nodes in a tree. 
+    This path may or may not pass through the root.
+
+   求过每一个点的最长路径，取全局最大值
+   过某一个点的最长路径=左子树的最大高度+右子树的最大高度
+   计算某一个节点的最大高度需要计算其左子树的右子树的最大高度，然后取最大值+1
+   两个函数整合成一个，同时更新全局最大路径长度和节点高度，代码如下：
+    */
+    int longest2 = 0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        if (root==null) return 0;
+        helper(root);
+        return longest2;
+    }
+    public int helper(TreeNode root) {
+        if (root==null) return 0;
+        int left = helper(root.left);
+        int right = helper(root.right);
+        longest2 = Math.max(longest2, left+right);
+        return Math.max(left, right)+1;
+    }
+
+    /* Leetcode 538. Convert BST to Greater Tree
+    Given a Binary Search Tree (BST), convert it to a Greater Tree such that every key of the original BST is 
+    changed to the original key plus sum of all keys greater than the original key in BST.
+    
+    Iterate through the tree as right, root, left, and update node values.
+    */
+    int sum = 0;
+    public TreeNode convertBST(TreeNode root) {
+        if (root==null) return root;
+        root.right = convertBST(root.right);
+        sum += root.val;
+        root.val = sum;
+        root.left = convertBST(root.left);
+        return root;
+    }
+    
+    /* Leetcode 572. Subtree of Another Tree
+    Given two non-empty binary trees s and t, check whether tree t has exactly the same structure and node values with a subtree of s.
+    A subtree of s is a tree consists of a node in s and all of this node's descendants. 
+    The tree s could also be considered as a subtree of itself.
+    如果遇到相同val则check是不是subtree，否则check left and right
+    */
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+        if (s==null) return false;
+        
+        if (checkSame(s, t)) return true;
+        else {
+            boolean left = isSubtree(s.left, t);
+            boolean right = isSubtree(s.right, t);
+            return left || right;
+        }
+    }
+    public boolean checkSame(TreeNode s, TreeNode t) {
+        if (s==null && t==null) return true;
+        if (s==null || t==null) return false;
+        if (s.val!=t.val) return false;
+        else {
+            boolean left = checkSame(s.left, t.left);
+            boolean right = checkSame(s.right, t.right);
+            return left && right;
+        }
+    }
 }
