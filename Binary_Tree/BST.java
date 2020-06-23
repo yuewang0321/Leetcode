@@ -23,8 +23,6 @@ class Solution {
             root.right = deleteNode(root.right, key);
         }
         else {
-            root.left = deleteNode(root.left, key);
-        }
         return root;
     }
     public TreeNode helper(TreeNode root) {
@@ -33,4 +31,72 @@ class Solution {
         }
         return root;
     }
+
+    /* Leetcode 96. Unique Binary Search Trees
+    Given n, how many structurally unique BST's (binary search trees) that store values 1 ... n?
+    DP problem:
+    https://www.youtube.com/watch?v=HWJEMKWzy-Q
+    */
+    public int numTrees(int n) {
+        ArrayList<Integer> dp = new ArrayList<Integer>();
+        dp.add(1);
+        dp.add(1);  
+        for (int i=2; i<=n; i++) {
+            int count = 0;
+            for (int j=0; j<i; j++) {
+                count += dp.get(j) * dp.get(i-j-1);
+            }
+            dp.add(count); 
+        }
+        return dp.get(n);
+    }
+
+    /* Leetcode 95. Unique Binary Search Trees II
+    Given an integer n, generate all structurally unique BST's (binary search trees) that store values 1 ... n.
+    遍历每一个节点k，以该节点为root的BST可以由其左、右子树所有可能的情况构成
+    https://www.youtube.com/watch?v=GZ0qvkTAjmw
+    */
+    public List<TreeNode> generateTrees(int n) {
+        return helper(1, n);
+    }   
+    public List<TreeNode> helper(int min, int max) {
+        List<TreeNode> result = new ArrayList<TreeNode>();
+        if (min>max) return result;
+        
+        for (int i=min; i<=max; i++) {
+            List<TreeNode> leftSub = helper(min, i-1);
+            List<TreeNode> rightSub = helper(i+1, max);
+            
+            if (leftSub.size()==0 && rightSub.size()==0) {
+                TreeNode temp = new TreeNode(i);
+                result.add(temp);
+            }
+            else if (rightSub.size()==0) {
+                for (TreeNode left : leftSub) {
+                    TreeNode temp = new TreeNode(i);
+                    temp.left = left;
+                    result.add(temp);
+                }
+            }
+            else if (leftSub.size()==0) {
+                for (TreeNode right : rightSub) {
+                    TreeNode temp = new TreeNode(i);
+                    temp.right = right;
+                    result.add(temp);
+                }
+            }
+            else {
+                for (TreeNode left : leftSub) {
+                    for (TreeNode right : rightSub) {
+                        TreeNode temp = new TreeNode(i);
+                        temp.left = left;
+                        temp.right = right;
+                        result.add(temp);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
 }
