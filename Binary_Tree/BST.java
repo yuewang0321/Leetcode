@@ -98,5 +98,4 @@ class Solution {
         }
         return result;
     }
-    
 }
