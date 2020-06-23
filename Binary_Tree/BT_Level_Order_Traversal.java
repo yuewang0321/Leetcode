@@ -85,5 +85,54 @@ class Solution {
         return rtn;
     }
 
-    
+    /* Leetcode 297. Serialize and Deserialize Binary Tree
+    serialize，用queue层序遍历即可
+    deserialize也要用queue，将root节点放入队列，然后数组中的前两个元素是其左右孩子，依次加入队列。
+    */
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        StringBuilder res = new StringBuilder();
+        
+        if(root == null) return res.toString();
+        queue.add(root);
+        
+        while(!queue.isEmpty()){
+            TreeNode temp = queue.poll();
+            if(temp != null){
+                res.append(temp.val+",");
+            }
+            else {
+                res.append("null,");
+                continue;
+            }
+            queue.add(temp.left);
+            queue.add(temp.right);
+        }
+        res.subSequence(0,res.length()-1);
+        return res.toString();
+    }
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if(data.length() == 0) return null;
+        
+        String[] nums = data.split(",");
+        Queue<TreeNode> queue = new LinkedList<>();
+        
+        TreeNode root = new TreeNode(Integer.parseInt(nums[0]));
+        queue.add(root);
+
+        for(int i = 1; i < nums.length;i++){
+            TreeNode parent = queue.poll();
+            if(!nums[i].equals("null")){
+                parent.left = new TreeNode(Integer.parseInt(nums[i]));
+                queue.add(parent.left);
+            }
+            if(!nums[++i].equals("null")){
+                parent.right = new TreeNode(Integer.parseInt(nums[i]));
+                queue.add(parent.right);
+            }
+        }
+        return root;
+    }
 }
