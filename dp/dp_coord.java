@@ -228,4 +228,34 @@ class Solution {
         }
         return jumps;
     }
+
+    /* Leetcode 300. Longest Increasing Subsequence
+    Given an unsorted array of integers, find the length of longest increasing subsequence.
+    */
+    /* DP O(n^2): https://www.youtube.com/watch?v=fV-TF4OvZpk
+    状态：f[i]表示从任意一个木桩出发，从低到高，跳到i点，最多踩过多少个木桩
+    转移方程：f[i] = max(f[j]+1) j满足：j<i && nums[j]<nums[i]
+    初始化：f[0] = f[1] = …= f[n-1] = 1 从前面的任何一个点出发跳到此处要经过多少根木桩，初始化时，只经过自己跳到自己踩过的木桩树为1。
+    结果：max(f[1],f[2],….,f[n-1]) 因为递增子序列不一定以最后一个元素为结尾，这道题要求的是最长的子序列，所以需要在所有的点里面找到最大的值返回。
+    */
+    public int lengthOfLIS(int[] nums) {
+        if (nums.length<=0) return 0;
+        int result = 1;
+        
+        int[] longest = new int[nums.length];
+        for (int i=0; i<nums.length; i++) longest[i]=1;
+        
+        for (int i=0; i<nums.length; i++) {
+            for (int j=0; j<i; j++) {
+                if (nums[i]>nums[j]) {
+                    longest[i] = Math.max(longest[i], longest[j]+1);
+                    result = Math.max(result, longest[i]);
+                }
+            }
+        }
+        return result;   
+    }
+
+    /* Binary search
+    */
 }
