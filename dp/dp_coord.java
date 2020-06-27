@@ -65,16 +65,167 @@ class Solution {
         for (int i=0; i<m; i++) {
             result[i][0] = 1;
         }
-        System.out.println(Arrays.deepToString(result));
         for (int i=0; i<n; i++) {
             result[0][i] = 1;
         }
-        System.out.println(Arrays.deepToString(result));
         for (int i=1; i<m; i++) {
             for (int j=1; j<n; j++) {
                 result[i][j] = result[i-1][j] + result[i][j-1];
             }
         }
         return result[m-1][n-1];
+    }
+
+    /* Leetcode 63. Unique Paths II
+    with obstacles
+    在上一题的基础上设置了一些障碍点，所以只需要对障碍点进行判断即可。遇到障碍点时方案数设置为0.
+    */
+    public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+        int m = obstacleGrid.length;
+        int n = obstacleGrid[0].length;
+        int[][] result = new int[m][n];
+        
+        if (obstacleGrid[0][0]==1) return 0;
+        
+        result[0][0]=1;
+        for (int i=1; i<m; i++) {
+            if (obstacleGrid[i][0]!=1) result[i][0] = result[i-1][0];
+            else result[i][0] = 0;
+        }
+        for (int i=1; i<n; i++) {
+            if (obstacleGrid[0][i]!=1) result[0][i] = result[0][i-1];
+            else result[0][i] = 0;
+        }
+        
+        for (int i=1; i<m; i++) {
+            for (int j=1; j<n; j++) {
+                if (obstacleGrid[i][j]!=1) result[i][j] = result[i-1][j] + result[i][j-1];
+                else result[i][j]=0;
+            }
+        }
+        return result[m-1][n-1];
+    }
+
+    /* Leetcode 70. Climbing Stairs
+    You are climbing a stair case. It takes n steps to reach to the top.
+    Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+    状态：f[i]走到i点的方案数
+    转移方程：f[i] = f[i-1]+f[i-1]，因为只能走一步或者两步，所以只能从前一个或者两个格子过来。
+    初始化：f[0] = 1;f[1] = 1;f[2] = 2
+    结果：f[n]
+    */
+    public int climbStairs(int n) {
+        if (n==1) return 1;
+        if (n==2) return 2;
+        List<Integer> result = new ArrayList<>();
+        result.add(1);
+        result.add(2);
+        for (int i=2; i<n; i++) {
+            result.add(result.get(i-1)+result.get(i-2));
+        }
+        return result.get(result.size()-1);
+    }
+
+    /* Leetcode 55. Jump Game
+    Given an array of non-negative integers, you are initially positioned at the first index of the array.
+    Each element in the array represents your maximum jump length at that position.
+    Determine if you are able to reach the last index.
+    */
+    /* DP
+    数组中的数字表示当前点能够跳跃的最大步长，判断是否可以跳到最后一步：是否有可行方案问题
+
+    坐标型动态规划，一维坐标
+
+    状态：s[i]，是否能从起点跳到i点
+
+    取决于前面是否存在点j：
+        从起点是否能跳到j点：s[j]
+        从j是否能跳到i：j+s[j]>=i
+    转移方程：s[i] = s[j] && j+s[j]>=i（j<i）
+
+    初始化：s[0]=1
+
+    答案：s[m]，最后一个元素的状态
+    */
+    public boolean canJump(int[] nums) {
+        boolean[] result = new boolean[nums.length];
+        result[0] = true;
+        
+        for (int i=1; i<nums.length; i++) {
+            for (int j=0; j<i; j++) {
+                if (result[j] && nums[j]+j>=i) {
+                    result[i] = true;
+                    break;
+                }
+            }
+        }
+        return result[nums.length-1];
+    }
+    /* Greedy Algo
+    两个指针，一个从头向尾移动，另一个计算能够到达的最远距离。
+    需要注意的是：左侧指针向右移动时不能超过记录最远到达距离的指针。
+    */
+    public boolean canJump_Greedy(int[] nums) {
+        if (nums.length==0) return false;
+        
+        int i=0;
+        int farthest = nums[0];
+        while (farthest<nums.length-1 && i<nums.length-1 && i<=farthest) {
+            farthest = Math.max(farthest, i+nums[i]);
+            i++;
+        }
+        return farthest>=nums.length-1;
+    }
+
+
+    /* Leetcode 45. Jump Game II
+    Given an array of non-negative integers, you are initially positioned at the first index of the array.
+    Each element in the array represents your maximum jump length at that position.
+    Your goal is to reach the last index in the minimum number of jumps.
+    */
+    /* DP O(n^2): time limit exceed
+    状态：s[i]从起点出发跳到i点需要步数
+    转移方程：s[i] = min(s[j]+1),j满足条件可以一步跳到i，加个判断
+    初始化：s[0] = 0
+    答案：s[m]，最后一个元素状态
+    */
+    public int jump(int[] nums) {
+        if (nums.length<=0) return 0;
+        int[] minStep = new int[nums.length];
+        
+        minStep[0] = 0;
+        for(int i =1; i < nums.length;i++){
+            minStep[i] = Integer.MAX_VALUE;
+        }
+        for (int i=1; i<nums.length; i++) {
+            for (int j=0; j<i; j++) {
+                if(j + nums[j] >= i) {
+                    minStep[i] = Math.min(minStep[i],minStep[j]+1);
+                }
+            }
+        }
+        return minStep[nums.length-1];
+    }
+
+    /* Greedy Algo O(n)
+    https://www.youtube.com/watch?time_continue=203&v=vBdo7wtwlXs&feature=emb_logo
+    The main idea is based on greedy. 
+    Let's say the range of the current jump is [curBegin, curEnd], 
+    curFarthest is the farthest point that all points in [curBegin, curEnd] can reach. 
+    Once the current point reaches curEnd, then trigger another jump, and set the new curEnd with curFarthest, then keep the above steps
+    */
+    public int jump_greedy(int[] nums) {
+        int jumps = 0, curEnd = 0, curFarthest = 0;
+        // The reason we used i < length-1 is because it excludes the last value in nums. 
+        // We don't need to care about furthestJump we can get from the last element.
+        for (int i=0; i<nums.length-1; i++) {
+            curFarthest = Math.max(curFarthest, i+nums[i]);
+            if (i==curEnd) {
+                jumps++;
+                curEnd = curFarthest;
+            }
+            if (curEnd==nums.length-1) break;
+        }
+        return jumps;
     }
 }
