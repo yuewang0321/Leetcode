@@ -290,5 +290,42 @@ class Solution {
         return false;
     }
 
+    /* Leetcode 1482. Minimum Number of Days to Make m Bouquets
+    Given an integer array bloomDay, an integer m and an integer k.
+    We need to make m bouquets. To make a bouquet, you need to use k adjacent flowers from the garden.
+    The garden consists of n flowers, the ith flower will bloom in the bloomDay[i] and then can be used in exactly one bouquet.
+    Return the minimum number of days you need to wait to be able to make m bouquets from the garden. 
+    If it is impossible to make m bouquets return -1.
+
+    binary search, left = 1 and right = 10^9 according to question
+    given mid days, count how many flowers blooms, and how many bouquets we can get
+    if bouquets < m, left = mid+1
+    else right = mid
+    */
+    public int minDays(int[] bloomDay, int m, int k) {
+        if (m*k>bloomDay.length) return -1;
+        
+        int left = 1, right = (int)Math.pow(10, 9);
+        
+        while (left<right) {
+            int mid = left + (right-left)/2;
+            int flowers = 0, bouquets = 0;
+            
+            for (int bloom: bloomDay) {
+                if (bloom<=mid) {
+                    flowers+=1;
+                    if (flowers>=k) {
+                        flowers=0;
+                        bouquets+=1;
+                    }
+                } else {
+                    flowers=0;
+                }
+            }
+            if (bouquets<m) left = mid+1;
+            else right = mid;
+        }
+        return left;
+    }
 
 }
