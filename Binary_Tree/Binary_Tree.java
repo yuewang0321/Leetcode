@@ -262,4 +262,21 @@ class Solution {
         }
         return false;
     }
+
+    /* Leetcode 101. Symmetric Tree
+    Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+
+    same as idea above, check left & right, then (left.right, right.left) and (left.left, right.right)
+    */
+    public boolean isSymmetric(TreeNode root) {
+        return root==null || isSymmetricHelper(root.left, root.right);
+    }
+    public boolean isSymmetricHelper(TreeNode left, TreeNode right) {
+        if (left==null || right==null) return left==right;
+        
+        if (left.val==right.val) {
+            return isSymmetricHelper(left.left, right.right) && isSymmetricHelper(left.right, right.left);
+        }
+        return false;
+    }
 }
