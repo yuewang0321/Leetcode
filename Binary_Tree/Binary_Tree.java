@@ -312,4 +312,29 @@ class Solution {
         }
         return root;
     }
+
+    /* Leetcode 257. Binary Tree Paths
+    Given a binary tree, return all root-to-leaf paths.
+
+    keeping building a string until the node is a leaf, insert the string into list
+    */
+    List<String> result = new ArrayList<>();
+    
+    public List<String> binaryTreePaths(TreeNode root) {
+        if (root==null) return result;
+        binaryTreePathHelper(root, String.valueOf(root.val));
+        return result;
+    }
+    public void binaryTreePathHelper(TreeNode root, String sb) {
+        if (root.left==null && root.right==null)
+            result.add(sb);
+        if (root.left!=null) {
+            String left = sb + "->" + String.valueOf(root.left.val);
+            binaryTreePathHelper(root.left, left);
+        }
+        if (root.right!=null) {
+            String right = sb + "->" + String.valueOf(root.right.val);
+            binaryTreePathHelper(root.right, right);   
+        }
+    }
 }
