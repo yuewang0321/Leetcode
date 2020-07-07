@@ -279,4 +279,37 @@ class Solution {
         }
         return false;
     }
+
+    /* Leetcode 226. Invert Binary Tree
+
+    Iterative: the idea is to swap left and right, so we can use recursion to keep swapping
+    */
+    public TreeNode invertTree(TreeNode root) {
+        if (root==null) return null;
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        root.left = invertTree(right);
+        root.right = invertTree(left);
+        return root;
+    }
+    /* Use Queue(or Stack): swap the current node's left and right, then add left and right into queue
+        BFS - level by level
+    */
+    public TreeNode invertTree_Queue(TreeNode root) {
+        if (root==null) return null;
+        
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        
+        while (!q.isEmpty()) {
+            TreeNode curr = q.poll();
+            TreeNode temp = curr.left;
+            curr.left = curr.right;
+            curr.right = temp;
+            
+            if (curr.left!=null) q.add(curr.left);
+            if (curr.right!=null) q.add(curr.right);
+        }
+        return root;
+    }
 }
