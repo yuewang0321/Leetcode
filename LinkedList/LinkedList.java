@@ -309,4 +309,51 @@ class Solution {
         }
         System.out.println("================");
     }*/
+
+    /* Leetcode 24. Swap Nodes in Pairs
+    Given a linked list, swap every two adjacent nodes and return its head.
+    You may not modify the values in the list's nodes, only nodes itself may be changed.
+    Given 1->2->3->4, you should return the list as 2->1->4->3.
+
+    Use recursion to keep swaping
+    */
+    public ListNode swapPairs(ListNode head) {
+        if ((head==null) || (head.next==null)) return head;
+        
+        ListNode temp = head.next;
+        head.next = swapPairs(head.next.next);
+        temp.next = head;
+        return temp;
+    }
+
+    /* 25. Reverse Nodes in k-Group
+    Given a linked list, reverse the nodes of a linked list k at a time and return its modified list.
+    k is a positive integer and is less than or equal to the length of the linked list. 
+    If the number of nodes is not a multiple of k then left-out nodes in the end should remain as it is.
+
+    跟上面的思路一样，但是要检查是不是够k个，和需要extra pointer来指向第k个
+    */
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (head==null) return head;
+        ListNode check = head;
+        for (int i=0; i<k-1; i++) {
+            check = check.next;
+            if (check==null) return head;
+        }
+        
+        ListNode counter = head;
+        ListNode prev = null;
+        ListNode curr = head;
+        for (int i=0; i<k; i++) {
+            counter = counter.next;
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        head.next = reverseKGroup(counter, k);
+        
+        return prev;
+    }
+
 }
