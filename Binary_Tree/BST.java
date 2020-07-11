@@ -98,4 +98,40 @@ class Solution {
         }
         return result;
     }
+
+    /* Leetcode 173. Binary Search Tree Iterator
+    Implement an iterator over a binary search tree (BST). Your iterator will be initialized with the root node of a BST.
+    Calling next() will return the next smallest number in the BST.
+
+    Use dfs to go through the tree, store nodes in queue
+    Or Stack will also work: https://leetcode.com/problems/binary-search-tree-iterator/discuss/52526/Ideal-Solution-using-Stack-(Java)
+    */
+
+    class BSTIterator {
+    
+        public Queue<TreeNode> queue;
+        public BSTIterator(TreeNode root) {
+            queue = new LinkedList<TreeNode>();
+            this.addToQueue(root);
+        }
+        
+        /** @return the next smallest number */
+        public int next() {
+            return this.queue.poll().val;
+        }
+        
+        /** @return whether we have a next smallest number */
+        public boolean hasNext() {
+            return (!this.queue.isEmpty());
+        }
+        
+        public void addToQueue(TreeNode root) {
+            if (root == null) return;
+            if (root.left!=null)
+                this.addToQueue(root.left);
+            this.queue.add(root);
+            if (root.right!=null)
+                this.addToQueue(root.right);
+        }
+    }
 }
