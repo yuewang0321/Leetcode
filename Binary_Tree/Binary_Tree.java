@@ -75,6 +75,35 @@ class Solution {
         return (left||right);
     }
 
+    /* Leetcode 113. Path Sum II
+    Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+
+    use recursion to traverse tree, and update sum, lst and ret
+    */
+    public List<List<Integer>> pathSum(TreeNode root, int sum) {
+        if (root==null) return new ArrayList<>();
+        List<List<Integer>> ret = new ArrayList<>();
+        List<Integer> lst = new ArrayList<>();
+        helper(root, sum, lst, ret);
+        return ret;
+    }
+    public void helper(TreeNode root, int sum, List<Integer> lst, List<List<Integer>> ret) {
+        if (root.left==null && root.right==null && root.val==sum) {
+            lst.add(root.val);
+            ret.add(lst);
+        }
+        if (root.left!=null){
+            List<Integer> leftlst = new ArrayList<>(lst);
+            leftlst.add(root.val);
+            helper(root.left, sum-root.val, leftlst, ret);
+        }
+        if (root.right!=null) {
+            List<Integer> rightlst = new ArrayList<>(lst);
+            rightlst.add(root.val);
+            helper(root.right, sum-root.val, rightlst, ret);
+        }
+    }
+
     /* Binary Tree Maximum Path Sum II
     给定一个二叉树，从根节点root出发，求最大路径和，可以在任一点结束
     如果是求从root到leaf的最大路径，就用分治法，从上到下，每个节点的最大路径是其左子树和右子树的最大路径的最大值:
