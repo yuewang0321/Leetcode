@@ -103,6 +103,35 @@ class Solution {
             helper(root.right, sum-root.val, rightlst, ret);
         }
     }
+    /*437. Path Sum III
+    You are given a binary tree in which each node contains an integer value.
+    Find the number of paths that sum to a given value.
+    The path does not need to start or end at the root or a leaf, but it must go downwards (traveling only from parent nodes to child nodes).
+    */
+    int ans = 0;
+    public int pathSum(TreeNode root, int sum) {
+        helper(root, sum);
+        return ans;
+    }
+    public List<Integer> helper(TreeNode root, int sum) {
+        List<Integer> l = new ArrayList<>();
+        if (root==null) return l;
+        if (root.val==sum) ans++;
+        
+        List<Integer> left = helper(root.left, sum);
+        List<Integer> right = helper(root.right, sum);
+        
+        for (int e:left) {
+            if (e+root.val==sum) ans++;
+            l.add(e+root.val);
+        }
+        for (int e:right) {
+            if (e+root.val==sum) ans++;
+            l.add(e+root.val);
+        }
+        l.add(root.val);
+        return l;
+    }
 
     /* Binary Tree Maximum Path Sum II
     给定一个二叉树，从根节点root出发，求最大路径和，可以在任一点结束
