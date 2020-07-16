@@ -187,4 +187,34 @@ class Solution {
         }
         return result;
     }
+
+    /* Leetcode 16. 3Sum Closest
+    Given an array nums of n integers and an integer target, find three integers in nums such that the sum is closest to target. 
+    Return the sum of the three integers. You may assume that each input would have exactly one solution.
+
+    use 3 pointers to point current element, next element and the last element. 
+    If the sum is less than target, it means we have to add a larger element so next element move to the next. 
+    If the sum is greater, it means we have to add a smaller element so last element move to the second last element.
+    Keep doing this until the end. Each time compare the difference between sum and target, 
+    if it is less than minimum difference so far, then replace result with it, otherwise keep iterating.
+    */
+    public int threeSumClosest(int[] nums, int target) {
+        if (nums.length==0) return 0;
+        
+        Arrays.sort(nums);
+        int result = nums[nums.length-1] + nums[nums.length-2] + nums[nums.length-3];
+        
+        for (int i=0; i<nums.length-2; i++) {
+            int start = i + 1, end = nums.length - 1;
+            while (start<end) {
+                int temp = nums[i] + nums[start] + nums[end];
+                if (temp>target) end--;
+                else if (temp<target) start++;
+                else if (temp==target) return temp;
+                
+                if (Math.abs(temp-target)<Math.abs(result-target)) result = temp;   
+            }
+        }
+        return result;
+    }
 }
