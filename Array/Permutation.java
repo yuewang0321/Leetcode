@@ -38,4 +38,67 @@ class Solution {
             end--;
         }
     }
+
+    /* Leetcode 46. Permutations
+    Given a collection of distinct integers, return all possible permutations.
+
+    [1,2,3]
+    [1] -> [1,2] -> [1,2,3] -> delete 3 -> delete 2 -> [1,3] -> [1,3,2] -> delete 2 -> delete 3 -> delete 1
+    [2] and [3] are the same
+    */
+    List<List<Integer>> result = new ArrayList<>();
+    public List<List<Integer>> permute(int[] nums) {
+        helper(nums, new ArrayList<>());
+        return result;
+    }
+    
+    public void helper(int[] nums, List<Integer> temp) {
+        if (temp.size()==nums.length) {
+            result.add(new ArrayList<>(temp));
+        }
+        else {
+            for (int i=0; i<nums.length; i++) {
+                if (temp.contains(nums[i])) continue;
+                else {
+                    temp.add(nums[i]);
+                    helper(nums, temp);
+                    temp.remove(temp.size()-1);
+                }
+            }
+        }
+    } 
+
+    /* Leetcode 47. Permutations II
+    Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+    same as permuation, but add a list of booleans to keep tracking if the value is already used
+    */
+    List<List<Integer>> unique = new ArrayList<>();
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Boolean[] used = new Boolean[nums.length]; // initialize a boolean array
+          for(int i = 0; i < used.length; i++) {
+             used[i] = false;
+          }
+        helper(nums, new ArrayList<>(), used);
+        
+        return unique;
+    }
+    
+    public void helper(int[] nums, List<Integer> temp, Boolean[] used) {
+        if (temp.size()==nums.length && !unique.contains(temp)) {
+            unique.add(new ArrayList<>(temp));
+        }
+        else {
+            for (int i=0; i<nums.length; i++) {
+                if (used[i]) continue;
+                else {
+                    temp.add(nums[i]);
+                    used[i] = true;
+                    helper(nums, temp, used);
+                    temp.remove(temp.size()-1);
+                    used[i] = false;
+                }
+            }
+        }
+    }
 }
