@@ -101,4 +101,39 @@ class Solution {
             }
         }
     }
+
+
+    /* Leetcode 39. Combination Sum
+    Given a set of candidate numbers (candidates) (without duplicates) and a target number (target), 
+    find all unique combinations in candidates where the candidate numbers sums to target.
+    The same repeated number may be chosen from candidates unlimited number of times.
+    Input: candidates = [2,3,6,7], target = 7,
+    A solution set is:
+    [
+    [7],
+    [2,2,3]
+    ]
+
+    same as above, use backtarcking
+    but sort the array first then start searching from index i, to make sure we don't generate all permutations, just getting what we need.
+    becase [2,2,3] [2,3,2] [3,2,2] are the same in this case.
+    */
+    List<List<Integer>> combinationSum = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        helper(candidates, target, new ArrayList<>(), 0);
+        return combinationSum;
+    }
+    public void helper(int[] candidates, int target, List<Integer> temp, int start) {
+        if (target==0) combinationSum.add(new ArrayList<>(temp));
+        else {
+            for (int i=start; i<candidates.length; i++) {
+                if (target-candidates[i]>=0) {
+                    temp.add(candidates[i]);
+                    helper(candidates, target-candidates[i], temp, i);
+                    temp.remove(temp.size()-1);
+                }
+            }
+        }
+    }
 }
