@@ -136,4 +136,82 @@ class Solution {
             }
         }
     }
+
+    /* Leetcode 40. Combination Sum II
+    Given a collection of candidate numbers (candidates) and a target number (target), 
+    find all unique combinations in candidates where the candidate numbers sums to target.
+    Each number in candidates may only be used once in the combination.
+
+    Input: candidates = [10,1,2,7,6,1,5], target = 8,
+    A solution set is:
+    [
+        [1, 7],
+        [1, 2, 5],
+        [2, 6],
+        [1, 1, 6]
+    ]
+
+    用上一题的思路，加上之前used boolean list to keep tracking if the element is already used.
+    */
+    List<List<Integer>> combinationSum2 = new ArrayList<>();
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Boolean[] used = new Boolean[candidates.length];
+        Arrays.sort(candidates);
+        for (int i=0; i<candidates.length; i++) {
+            used[i] = false;
+        }
+        helper(candidates, target, new ArrayList<>(), used, 0);
+        return combinationSum2;
+    }
+    
+    public void helper(int[] candidates, int target, List<Integer> temp, Boolean[] used, int start) {
+        if (target==0 && !combinationSum2.contains(temp)) {
+            combinationSum2.add(new ArrayList<>(temp));
+        }
+        else {
+            for (int i=start; i<candidates.length; i++) {
+                if (target-candidates[i]>=0 && !used[i]) {
+                    used[i] = true;
+                    temp.add(candidates[i]);
+                    helper(candidates, target-candidates[i], temp, used, i);
+                    temp.remove(temp.size()-1);
+                    used[i] = false;
+                }
+            }
+        }
+    }
+
+    /* Leetcode 216. Combination Sum III
+    Find all possible combinations of k numbers that add up to a number n, 
+    given that only numbers from 1 to 9 can be used and each combination should be a unique set of numbers.
+    Input: k = 3, n = 7
+    Output: [[1,2,4]]
+
+    same backtracking idea, first generate nums list, then find permutations of length k that adds up to n
+    note that only numbers from 1 to 9 can be used and should be unique.
+    */
+    List<List<Integer>> combinationSum3 = new ArrayList<>();
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        int limit = Math.min(9, n);
+        int[] nums = new int[limit];
+        for (int i=1; i<limit+1; i++) {
+            nums[i-1] = i;
+        }
+        helper(nums, k, n, 0, new ArrayList<>(), 0);
+        return combinationSum3;
+    }
+    
+    public void helper(int[] nums, int k, int n, int sum, List<Integer> temp, int start) {
+        if (temp.size()==k && sum==n) combinationSum3.add(new ArrayList<>(temp));
+        else {
+            for (int i=start; i<nums.length; i++) {
+                if (temp.contains(nums[i])) continue;
+                else {
+                    temp.add(nums[i]);
+                    helper(nums, k, n, sum+nums[i], temp, i);
+                    temp.remove(temp.size()-1);
+                }
+            }
+        }
+    }
 }
