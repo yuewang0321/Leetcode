@@ -269,4 +269,41 @@ class Solution {
         dp[target] = res;
         return res;
     }
+
+    /* Leetcode 60. Permutation Sequence
+    The set [1,2,3,...,n] contains a total of n! unique permutations.
+
+    By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+
+        "123"
+        "132"
+        "213"
+        "231"
+        "312"
+        "321"
+    Given n and k, return the kth permutation sequence.
+
+    Input: n = 3, k = 3
+    Output: "213"
+
+    https://leetcode.com/problems/permutation-sequence/discuss/22507/%22Explain-like-I'm-five%22-Java-Solution-in-O(n)
+
+    The complexity is actually O(n^2), since remove in an arrayList will take O(n) complexity.
+    */
+    public String getPermutation(int n, int k) {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<Integer> num = new ArrayList<Integer>();
+        int fact = 1;
+        for (int i=1; i<=n; i++) {
+            fact *= i;
+            num.add(i);
+        }
+        for (int i=0, l=k-1; i<n; i++) {
+            fact /= (n-i);
+            int index = (l/fact);
+            sb.append(num.remove(index));
+            l -= index*fact;
+        }
+        return sb.toString();
+    }
 }
